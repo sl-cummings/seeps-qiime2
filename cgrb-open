@@ -1,0 +1,19 @@
+#!/usr/bin/tcsh
+
+##once you have a CGRB account, here's how to run Qiime on it!
+##my working directory on the CGRB is as follows:
+cd /nfs1/MICRO/Thurber_Lab/susie/
+
+qrsh
+#this logs in to one of the processing servers - they have the computing power to run big jobs
+#you know this works if the prompt changes from Linux@waterman to Linux@darwin
+
+#you might be able to try the following if you have the correct permissions
+qrsh -q micro
+#this should connect you to the server microbiome or calculon
+
+conda activate qiime2-2019.7
+#this activates a conda environment that allows Qiime to be run
+
+qiime --help
+#this allows you to test whether qiime is working. if it gives you a big help dialogue, you're good
