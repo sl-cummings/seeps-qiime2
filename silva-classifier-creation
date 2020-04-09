@@ -1,0 +1,31 @@
+#!/usr/bin/tcsh
+
+#Downloaded Silva release 132 in November 2019 - fasta files of database and taxonomy file
+
+#importing sequences
+qiime tools import \
+--type 'FeatureData[Sequence]' \
+--input-path SILVA132.fna \
+--output-path silva_132.qza
+#importing Silva taxonomy
+qiime tools import \
+--type 'FeatureTable[Taxonomy]' \
+--input-format HeaderlessTSVTaxonomyFormat \
+--input-path taxonomy_all_levels.txt \
+--output-path silva-132-taxonomy.qza
+
+#trimmed the database reads by 515F/806R primers
+qiime feature-classifier extract-reads \
+--i-sequences silva_132.qza \
+--p-f-primer GTGCCAGCMGCCGCGGTAA \
+--p-r-primer GGACTACHVGGGTWTCTAAT \
+--p-trunc-len 120 \
+--p-min-length 100 \
+--p-max-length 400 \
+--o-reads silva-132-ref-seqs.qza
+
+#then trained the Qiime classifier on this database
+qiime feature-classifier fit-classifier-naive-bayes \
+--i-reference-reads silva-132-ref-seqs.qza \
+--i-reference-taxonomy silva-132-taxonomy.qza \
+--o-classifier silva-classifier-qza
