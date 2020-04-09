@@ -1,0 +1,25 @@
+##after Qiime2 is active...
+
+qiime tools import \
+--type 'SampleData[SequencesWithQuality]' \
+--input-path raw-reads/ \
+--input-format CasavaOneEightSingleLanePerSampleDirFmt \
+--output-path demux-single-end.qza
+##this converts your FASTA files into a qiime-formatted file (.qza)
+##after input-path type the folder name where you keep your raw reads
+##the format of the reads should be: .fastq file, with each file containing seq and quality
+##each file represents one sample or sequencing lane, either forward (R1) or reverse reads (R2)
+##this input format doesn't combine forward and reverse reads, only one direction
+
+##with previous seep work the R2s were bad and made everything garbage, thus, single direction
+
+qiime demux summarize \
+--i-data demux-single-end.qza \
+--o-visualization demux.qzv
+##view by downloading file via CyberDuck and uploading it at https://view.qiime2.org/
+##or if you're working in VirtualBox:
+#qiime tools view demux.qzv
+##this produces a qiime graph that shows you two things:
+##1. number of reads in each sample
+##2. a graph showing the quality of the read over the sequence
+##using 2, you'll want to choose how much on each end to cut off, based on where the ends significantly decrease in quality
