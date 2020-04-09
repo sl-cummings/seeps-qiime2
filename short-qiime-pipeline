@@ -1,0 +1,61 @@
+#!/usr/bin/tcsh
+
+#import seq files
+qiime tools import \
+--type 'SampleData[SequencesWithQuality]' \
+--input-path raw-reads/ \
+--input-format CasavaOneEightSingleLanePerSampleDirFmt \
+--output-path demux-single-end.qza
+#determine statistics of sequences
+qiime demux summarize \
+--i-data demux-single-end.qza \
+--o-visualization demux.qzv
+
+#cut off bad ends - long, 1-3hrs
+qiime dada2 denoise-single \
+--i-demultiplexed-seqs demux-single-end.qza \
+--p-trim-left 13 \
+--p-trunc-len 181 \
+--o-representative-sequences unfiltered-rep-seqs.qza \
+--o-table unfiltered-table.qza \
+--o-denoising-stats unfilter-denoise-stats.qza
+#analyze dada2
+qiime metadata tabulate \
+--m-input-file unfilter-denoise-stats.qza \
+--o-visualization unfilter-denoise-stats.qzv
+
+#filter out low-read samples
+qiime feature-table filter-samples \
+--i-table unfiltered-table.qza \
+--p-min-frequency 6500 \
+--o-filtered-table filtered-table.qza
+#filter rep-seqs based on above
+qiime feature-table filter-seqs \
+--i-data unfiltered-rep-seqs.qza \
+--i-table filtered-table.qza \
+--o-filtered-data filtered-rep-seqs.qza
+#visualize filtered table and seqs
+qiime feature-table summarize \
+--i-table filtered-table.qza \
+--m-sample-metadata-file metadata.tsv \
+--o-visualization filtered-table.qzv
+qiime feature-table tabulate-seqs \
+--i-data filtered-rep-seqs.qza \
+--o-visualization filtered-rep-seqs.qzv
+
+#silva classification - taxonomy. LONG, leave overnight
+qiime feature-classifier classify-sklearn \
+--i-classifier silva-classifier.qza \
+--i-reads filtered-rep-seqs.qza \
+--o-classification taxonomy.qza
+#taxonomy results
+qiime metadata tabulate \
+--m-input-file taxonomy.qza \
+--o-visualization taxonomy.qzv
+
+##generate taxa barplots
+qiime taxa barplot \
+--i-table filtered-table.qza \
+--i-taxonomy taxonomy.qza \
+--m-metadata-file metadata.tsv \
+--o-visualization taxa-bar-plots.qzv
