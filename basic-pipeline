@@ -1,3 +1,5 @@
+#!/usr/bin/tcsh
+
 ##after Qiime2 is active...
 
 qiime tools import \
@@ -23,3 +25,28 @@ qiime demux summarize \
 ##1. number of reads in each sample
 ##2. a graph showing the quality of the read over the sequence
 ##using 2, you'll want to choose how much on each end to cut off, based on where the ends significantly decrease in quality
+
+qiime dada2 denoise-single \
+--i-demultiplexed-seqs demux-single-end.qza \
+--p-trim-left 13 \
+--p-trunc-len 181 \
+--o-representative-sequences unfiltered-rep-seqs.qza \
+--o-table unfiltered-table.qza \
+--o-denoising-stats unfilter-denoise-stats.qza
+##this cleans up the sequences, chopping off bad quality ends
+##again you will set the lengths based on demux results
+##first 12 bp are usually adapter so you can keep the p-trim-left the same
+
+qiime metadata tabulate \
+--m-input-file unfilter-denoise-stats.qza \
+--o-visualization unfilter-denoise-stats.qzv
+##view the results of your cleanup using qiime tools view or view.qiime2.org
+##at this point it will still include samples with too few reads, so to remove those we will do the following...
+
+qiime feature-table filter-samples \
+--i-table unfiltered-table.qza \
+--p-min-frequency 6500 \
+--o-filtered-table table.qza
+##the p-min-frequency is the minimum number of reads per sample you want to include
+##all samples with fewer than that many reads (bad seq reaction?) will be removed
+##use demux.qzv to determine a good cut-off for minimum reads
