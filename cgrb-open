@@ -17,3 +17,9 @@ conda activate qiime2-2019.7
 
 qiime --help
 #this allows you to test whether qiime is working. if it gives you a big help dialogue, you're good
+
+#in another window, again connect to the CGRB so you can check your progress/usage
+qrsh
+#make sure you're on the same server as above
+top
+#press q when finished
