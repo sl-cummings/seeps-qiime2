@@ -12,9 +12,7 @@ qiime tools import \
 ##the format of the reads should be: .fastq file, with each file containing seq and quality
 ##each file represents one sample or sequencing lane, either forward (R1) or reverse reads (R2)
 ##this input format doesn't combine forward and reverse reads, only one direction
-
 ##with previous seep work the R2s were bad and made everything garbage, thus, single direction
-
 qiime demux summarize \
 --i-data demux-single-end.qza \
 --o-visualization demux.qzv
@@ -33,10 +31,10 @@ qiime dada2 denoise-single \
 --o-representative-sequences unfiltered-rep-seqs.qza \
 --o-table unfiltered-table.qza \
 --o-denoising-stats unfilter-denoise-stats.qza
-##this cleans up the sequences, chopping off bad quality ends
+##this step is a long one, usually runs 1-3 hours
+##it cleans up the sequences, chopping off bad quality ends
 ##again you will set the lengths based on demux results
 ##first 12 bp are usually adapter so you can keep the p-trim-left the same
-
 qiime metadata tabulate \
 --m-input-file unfilter-denoise-stats.qza \
 --o-visualization unfilter-denoise-stats.qzv
@@ -46,7 +44,43 @@ qiime metadata tabulate \
 qiime feature-table filter-samples \
 --i-table unfiltered-table.qza \
 --p-min-frequency 6500 \
---o-filtered-table table.qza
+--o-filtered-table filtered-table.qza
 ##the p-min-frequency is the minimum number of reads per sample you want to include
 ##all samples with fewer than that many reads (bad seq reaction?) will be removed
 ##use demux.qzv to determine a good cut-off for minimum reads
+qiime feature-table filter-seqs \
+--i-data unfiltered-rep-seqs.qza \
+--i-table filtered-table.qza \
+--o-filtered-data filtered-rep-seqs.qza
+##this will filter out all sequences that are absent from the table
+##visualize the results of filtering as follows...
+qiime feature-table summarize \
+--i-table filtered-table.qza \
+--m-sample-metadata-file metadata.tsv \
+--o-visualization filtered-table.qzv
+qiime feature-table tabulate-seqs \
+--i-data filtered-rep-seqs.qza \
+--o-visualization filtered-rep-seqs.qzv
+
+##at this point I like to make folders for the unfiltered files, as well as all the visualizations/qzv to get them out of the way
+
+##I generated a classifier based on the Silva database. (trimmed to 515F/806R region) see another file for my process.
+##using this Silva classifier...
+qiime feature-classifier classify-sklearn \
+--i-classifier silva-classifier.qza \
+--i-reads filtered-rep-seqs.qza \
+--o-classification taxonomy.qza
+##this is a long and intense step, 6 hours or more. leave it overnight
+qiime metadata tabulate \
+--m-input-file taxonomy.qza \
+--o-visualization taxonomy.qzv
+##this views the results of your taxonomy
+
+##create beautiful and fun graphics of the taxonomy
+qiime taxa barplot \
+--i-table filtered-table.qza \
+--i-taxonomy taxonomy.qza \
+--m-metadata-file metadata.tsv \
+--o-visualization taxa-bar-plots.qzv
+##from the visualization, you can download the taxa barplot images themselves
+##AND you can get CSV files of tabulated samples vs. taxonomies at a given taxonomy level (level 4 usually most helpful)
