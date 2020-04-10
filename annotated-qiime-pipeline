@@ -18,7 +18,7 @@ qiime demux summarize \
 --o-visualization demux.qzv
 ##view by downloading file via CyberDuck and uploading it at https://view.qiime2.org/
 ##or if you're working in VirtualBox:
-#qiime tools view demux.qzv
+# qiime tools view demux.qzv
 ##this produces a qiime graph that shows you two things:
 ##1. number of reads in each sample
 ##2. a graph showing the quality of the read over the sequence
@@ -64,7 +64,8 @@ qiime feature-table tabulate-seqs \
 
 ##at this point I like to make folders for the unfiltered files, as well as all the visualizations/qzv to get them out of the way
 
-##I generated a classifier based on the Silva database. (trimmed to 515F/806R region) see my silva-classifier-creation file for my process.
+##I generated a classifier based on the Silva database. (trimmed to 515F/806R region)
+##see my silva-classifier-creation file for my process.
 ##using this Silva classifier...
 qiime feature-classifier classify-sklearn \
 --i-classifier silva-classifier.qza \
