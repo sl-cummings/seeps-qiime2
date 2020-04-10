@@ -64,7 +64,7 @@ qiime feature-table tabulate-seqs \
 
 ##at this point I like to make folders for the unfiltered files, as well as all the visualizations/qzv to get them out of the way
 
-##I generated a classifier based on the Silva database. (trimmed to 515F/806R region) see another file for my process.
+##I generated a classifier based on the Silva database. (trimmed to 515F/806R region) see my silva-classifier-creation file for my process.
 ##using this Silva classifier...
 qiime feature-classifier classify-sklearn \
 --i-classifier silva-classifier.qza \
