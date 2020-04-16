@@ -1,0 +1,8 @@
+qiime picrust2 full-pipeline \
+--i-table filtered-table.qza \
+--i-seq filtered-rep-seqs.qza \
+--output-dir picrust2_out \
+--p-threads 1 \
+--p-hsp-method mp \
+--p-max-nsti 2 \
+--verbose

@@ -1,0 +1,7 @@
+picrust2_pipeline.py \
+-s filtered-rep-seqs.fasta \
+-i filtered-feature-table.biom \
+-m mp \
+-o picrust2_out \
+-p 1 \
+--verbose
