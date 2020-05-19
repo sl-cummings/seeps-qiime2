@@ -15,7 +15,7 @@ qiime --help
 #this allows you to test whether qiime is working. if it gives you a big help dialogue, you're good
 
 #in another window, again connect to the CGRB so you can check your progress/usage
-qrsh
-#make sure you're on the same server as above
+qrsh -q micro@calculon
+#this ensures you connect to the same server as above (use "microbiome" if you're on that one)
 top
 #press q when finished
