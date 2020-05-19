@@ -9,6 +9,7 @@ SGE_Avail
 
 qrsh -q micro
 #this should connect you to the server microbiome or calculon
+#this is aka "opening an interactive session"
 #if you want to request a certain number of processors to be set aside, add "-pe thread #" to the end
 
 conda activate qiime2-2019.7
