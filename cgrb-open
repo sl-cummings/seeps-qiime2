@@ -8,6 +8,9 @@ qrsh -q micro
 #this should connect you to the server microbiome or calculon
 #if you want to request a certain number of processors, add "-pe thread #" to the end
 
+SGE_Avail
+#this is a CGRB-specific program that can tell you which servers are available and how they're being used
+
 conda activate qiime2-2019.7
 #this activates a conda environment that allows Qiime to be run
 
