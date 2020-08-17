@@ -59,3 +59,20 @@ qiime taxa barplot \
 --i-taxonomy taxonomy.qza \
 --m-metadata-file metadata.tsv \
 --o-visualization taxa-bar-plots.qzv
+
+##alpha and beta diversity stats - phylogenetic tree
+qiime phylogeny align-to-tree-mafft-fasttree \
+--i-sequences rep-seqs.qza \
+--o-alignment aligned-rep-seqs.qza \
+--o-masked-alignment masked-aligned-rep-seqs.qza \
+--o-tree unrooted-tree.qza \
+--o-rooted-tree rooted-tree.qza
+#20min, not intensive
+
+#generate diversity core metrics
+qiime diversity core-metrics-phylogenetic \
+--i-phylogeny rooted-tree.qza \
+--i-table filtered-table.qza \
+--p-sampling-depth 6500 \
+--m-metadata-file metadata.tsv \
+--output-dir core_metrics_results
