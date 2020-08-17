@@ -97,7 +97,7 @@ qiime phylogeny align-to-tree-mafft-fasttree \
 #not a super intensive step, so something I can do on my own computer
 
 #then generate diversity core metrics
-qiime diversity core_metrics_phylogenetic \
+qiime diversity core-metrics-phylogenetic \
 --i-phylogeny rooted-tree.qza \
 --i-table filtered-table.qza \
 --p-sampling-depth 6500 \
