@@ -85,3 +85,21 @@ qiime taxa barplot \
 --o-visualization taxa-bar-plots.qzv
 ##from the visualization, you can download the taxa barplot images themselves
 ##AND you can get CSV files of tabulated samples vs. taxonomies at a given taxonomy level (level 4 usually most helpful)
+
+##alpha and beta diversity stats
+#first create a phylogenetic tree
+qiime phylogeny align-to-tree-mafft-fasttree \
+--i-sequences rep-seqs.qza \
+--o-alignment aligned-rep-seqs.qza \
+--o-masked-alignment masked-aligned-rep-seqs.qza \
+--o-tree unrooted-tree.qza \
+--o-rooted-tree rooted-tree.qza
+
+#then generate diversity core metrics
+qiime diversity core_metrics_phylogenetic \
+--i-phylogeny rooted-tree.qza \
+--i-table table.qza \
+--p-sampling-depth 6500 \
+--m-metadata-file metadata.tsv \
+--output-dir core_metrics_results
+##creates a whole bunch of diversity stats, alpha and beta, and some emperor plots/NMDS
