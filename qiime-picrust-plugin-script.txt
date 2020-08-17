@@ -12,11 +12,3 @@ qiime picrust2 full-pipeline \
 qiime tools export \
 --input-path ko_metagenome.qza \
 --output-path ko_metagenome
-
-#you can also plug in the results of these to core-diversity-metrics...
-qiime diversity core-metrics-phylogenetic \
---i-phylogeny rooted-tree.qza \
---i-table ko_metagenome.qza \
---p-sampling-depth 6500 \
---m-metadata-file metadata.tsv \
---output-dir core_metrics_results
