@@ -9,7 +9,7 @@ qiime tools import \
 --output-path demux-single-end.qza
 ##this converts your FASTA files into a qiime-formatted file (.qza)
 ##after input-path type the folder name where you keep your raw reads
-##the format of the reads should be: .fastq file, with each file containing seq and quality
+##the format of the reads should be: .fastq.gz file, with each file containing seq and quality (MUST BE GZIPPED)
 ##each file represents one sample or sequencing lane, either forward (R1) or reverse reads (R2)
 ##this input format doesn't combine forward and reverse reads, only one direction
 ##with previous seep work the R2s were bad and made everything garbage, thus, single direction
