@@ -12,3 +12,5 @@ qiime picrust2 full-pipeline \
 qiime tools export \
 --input-path ko_metagenome.qza \
 --output-path ko_metagenome
+#initially creates a .biom table, convert to .tsv as below
+biom convert -i feature-table.biom -o feature-table.tsv --to-tsv
