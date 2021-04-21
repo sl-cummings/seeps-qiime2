@@ -45,7 +45,7 @@ qiime metadata tabulate \
 
 qiime feature-table filter-samples \
 --i-table unfiltered-table.qza \
---p-min-frequency 6500 \
+--p-min-frequency 1000 \
 --o-filtered-table filtered-table.qza
 ##the p-min-frequency is the minimum number of reads per sample you want to include
 ##all samples with fewer than that many reads (bad seq reaction?) will be removed
@@ -88,7 +88,7 @@ qiime taxa barplot \
 --m-metadata-file metadata.tsv \
 --o-visualization taxa-bar-plots.qzv
 ##from the visualization, you can download the taxa barplot images themselves
-##AND you can get CSV files of tabulated samples vs. taxonomies at a given taxonomy level (level 4 usually most helpful)
+##AND you can get CSV files of tabulated samples vs. taxonomies at a given taxonomy level (level 4 is helpful; level 8 contains everything)
 
 ##alpha and beta diversity stats
 #first create a phylogenetic tree
@@ -104,7 +104,7 @@ qiime phylogeny align-to-tree-mafft-fasttree \
 qiime diversity core-metrics-phylogenetic \
 --i-phylogeny rooted-tree.qza \
 --i-table filtered-table.qza \
---p-sampling-depth 6500 \
+--p-sampling-depth 1000 \
 --m-metadata-file metadata.tsv \
 --output-dir core_metrics_results
 ##creates a whole bunch of diversity stats, alpha and beta, and some emperor plots/NMDS
