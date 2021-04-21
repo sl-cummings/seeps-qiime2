@@ -34,7 +34,7 @@ qiime dada2 denoise-single \
 --o-denoising-stats unfilter-denoise-stats.qza
 ##this step is a long one, usually runs 1-3 hours
 ##it cleans up the sequences, chopping off bad quality ends
-## the p-n-threads will work in ANY intensive step, makes sure qiime uses all processors assigned to it
+## the p-n-threads makes sure qiime uses all processors assigned to it
 ##again you will set the lengths based on demux results
 ##first 12 bp are usually adapter so you can keep the p-trim-left the same
 qiime metadata tabulate \
@@ -72,8 +72,10 @@ qiime feature-table tabulate-seqs \
 qiime feature-classifier classify-sklearn \
 --i-classifier silva-classifier.qza \
 --i-reads filtered-rep-seqs.qza \
+--p-n-jobs -1 \
 --o-classification taxonomy.qza
 ##this is a long and intense step, 6 hours or more. leave it overnight
+##p-n-jobs with -1 ensures that all available processors are used; if you use 1 then only one will be used
 qiime metadata tabulate \
 --m-input-file taxonomy.qza \
 --o-visualization taxonomy.qzv
