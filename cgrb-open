@@ -1,8 +1,6 @@
 #!/usr/bin/tcsh
 
 ##once you have a CGRB account, here's how to run Qiime on it!
-##my working directory on the CGRB is as follows:
-cd /nfs1/MICRO/Thurber_Lab/susie/
 
 SGE_Avail
 #this is a CGRB-specific program that can tell you which servers are available and how they're being used
