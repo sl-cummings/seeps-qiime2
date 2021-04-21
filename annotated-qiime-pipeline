@@ -26,6 +26,7 @@ qiime demux summarize \
 
 qiime dada2 denoise-single \
 --i-demultiplexed-seqs demux-single-end.qza \
+--p-n-threads 16 \
 --p-trim-left 13 \
 --p-trunc-len 181 \
 --o-representative-sequences unfiltered-rep-seqs.qza \
@@ -33,6 +34,7 @@ qiime dada2 denoise-single \
 --o-denoising-stats unfilter-denoise-stats.qza
 ##this step is a long one, usually runs 1-3 hours
 ##it cleans up the sequences, chopping off bad quality ends
+## the p-n-threads will work in ANY intensive step, makes sure qiime uses all processors assigned to it
 ##again you will set the lengths based on demux results
 ##first 12 bp are usually adapter so you can keep the p-trim-left the same
 qiime metadata tabulate \
