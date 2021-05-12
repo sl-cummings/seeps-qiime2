@@ -6,35 +6,37 @@ qiime tools import \
 --input-path raw-reads/ \
 --input-format CasavaOneEightSingleLanePerSampleDirFmt \
 --output-path demux-single-end.qza
-#determine statistics of sequences
+#summarize
 qiime demux summarize \
 --i-data demux-single-end.qza \
 --o-visualization demux.qzv
 
-#cut off bad ends - long, 1-3hrs
+#dada2 cleanup
 qiime dada2 denoise-single \
 --i-demultiplexed-seqs demux-single-end.qza \
+--p-n-threads 16 \
 --p-trim-left 13 \
 --p-trunc-len 181 \
 --o-representative-sequences unfiltered-rep-seqs.qza \
 --o-table unfiltered-table.qza \
 --o-denoising-stats unfilter-denoise-stats.qza
-#analyze dada2
+##LONG; several hours
+#tabulate results of dada2
 qiime metadata tabulate \
 --m-input-file unfilter-denoise-stats.qza \
 --o-visualization unfilter-denoise-stats.qzv
 
-#filter out low-read samples
+#filter low-depth seqs
 qiime feature-table filter-samples \
 --i-table unfiltered-table.qza \
---p-min-frequency 6500 \
+--p-min-frequency 1500 \
 --o-filtered-table filtered-table.qza
-#filter rep-seqs based on above
+
 qiime feature-table filter-seqs \
 --i-data unfiltered-rep-seqs.qza \
 --i-table filtered-table.qza \
 --o-filtered-data filtered-rep-seqs.qza
-#visualize filtered table and seqs
+#summarize results
 qiime feature-table summarize \
 --i-table filtered-table.qza \
 --m-sample-metadata-file metadata.tsv \
@@ -43,36 +45,38 @@ qiime feature-table tabulate-seqs \
 --i-data filtered-rep-seqs.qza \
 --o-visualization filtered-rep-seqs.qzv
 
-#silva classification - taxonomy. LONG, leave overnight
+#optional: create new folders for visualizations and unfiltered
+
+#taxonomy classification
 qiime feature-classifier classify-sklearn \
 --i-classifier silva-classifier.qza \
 --i-reads filtered-rep-seqs.qza \
 --o-classification taxonomy.qza
-#taxonomy results
+##LONG; overnight
+#view results
 qiime metadata tabulate \
 --m-input-file taxonomy.qza \
 --o-visualization taxonomy.qzv
 
-##generate taxa barplots
+#taxa barplots
 qiime taxa barplot \
 --i-table filtered-table.qza \
 --i-taxonomy taxonomy.qza \
 --m-metadata-file metadata.tsv \
 --o-visualization taxa-bar-plots.qzv
+#can get taxonomy tables from this
 
-##alpha and beta diversity stats - phylogenetic tree
+##alpha and beta diversity stats
 qiime phylogeny align-to-tree-mafft-fasttree \
 --i-sequences rep-seqs.qza \
 --o-alignment aligned-rep-seqs.qza \
 --o-masked-alignment masked-aligned-rep-seqs.qza \
 --o-tree unrooted-tree.qza \
 --o-rooted-tree rooted-tree.qza
-#20min, not intensive
-
-#generate diversity core metrics
+#then generate diversity core metrics
 qiime diversity core-metrics-phylogenetic \
 --i-phylogeny rooted-tree.qza \
 --i-table filtered-table.qza \
---p-sampling-depth 6500 \
+--p-sampling-depth 1000 \
 --m-metadata-file metadata.tsv \
 --output-dir core_metrics_results
