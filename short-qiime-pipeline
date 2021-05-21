@@ -64,7 +64,12 @@ qiime taxa barplot \
 --i-taxonomy taxonomy.qza \
 --m-metadata-file metadata.tsv \
 --o-visualization taxa-bar-plots.qzv
-#can get taxonomy tables from this
+#can get taxonomy tables from this.. or the following
+qiime taxa collapse \
+--i-table filtered-table.qza \
+--i-taxonomy taxonomy-silva.qza \
+--p-level 8 \
+--o-collapsed-table lvl8_collapsed_taxa-bar-plots-silva.qza
 
 ##alpha and beta diversity stats
 qiime phylogeny align-to-tree-mafft-fasttree \
