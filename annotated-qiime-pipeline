@@ -89,6 +89,12 @@ qiime taxa barplot \
 --o-visualization taxa-bar-plots.qzv
 ##from the visualization, you can download the taxa barplot images themselves
 ##AND you can get CSV files of tabulated samples vs. taxonomies at a given taxonomy level (level 4 is helpful; level 8 contains everything)
+##alternatively if that method doesn't work, you can directly output the table this way:
+qiime taxa collapse \
+--i-table filtered-table.qza \
+--i-taxonomy taxonomy-silva.qza \
+--p-level 8 \
+--o-collapsed-table lvl8_collapsed_taxa-bar-plots-silva.qza
 
 ##alpha and beta diversity stats
 #first create a phylogenetic tree
