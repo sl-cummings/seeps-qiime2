@@ -13,6 +13,16 @@ qiime tools import \
 ##each file represents one sample or sequencing lane, either forward (R1) or reverse reads (R2)
 ##this input format doesn't combine forward and reverse reads, only one direction
 ##with previous seep work the R2s were bad and made everything garbage, thus, single direction
+
+##alternative import method: using manifest
+#you need a manifest file, which lists sample names in one col and the ABSOLUTE FILEPATH to each .fastq.gz file in the 2nd
+#sometimes the import is picky because the format is not exactly casava 1.8 and this bypasses that
+qiime tools import \
+  --type 'SampleData[SequencesWithQuality]' \
+  --input-path manifest.tsv \
+  --output-path demux-single-end.qza \
+  --input-format SingleEndFastqManifestPhred33V2
+
 qiime demux summarize \
 --i-data demux-single-end.qza \
 --o-visualization demux.qzv
